@@ -4,27 +4,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.demo.model.pojoa;
-import com.example.demo.model.pojob;
+import com.example.demo.model.Pojoa;
+import com.example.demo.model.Pojob;
 
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.stream.*;
 
 @Service
-public class universityservice {
+public class Universityservice {
     @Autowired
     private RestTemplate restTemplate;
     private static final String BASE_URL = "http://universities.hipolabs.com/search";
 
+    @Autowired
+    public void Universityservice(RestTemplate restTemplate){
+        this.restTemplate = restTemplate;
+    }
+
     // Single country API request
-    public List<pojob> getUniversitiesByCountry(String country) {
+    public List<Pojob> getUniversitiesByCountry(String country) {
         try {
             String url = BASE_URL + "?country=" + country;
-            pojoa[] response = restTemplate.getForObject(url, pojoa[].class);
+            Pojoa[] response = restTemplate.getForObject(url, Pojoa[].class);
             if (response != null) {
                 return List.of(response).stream()
-                        .map(pojoa::getData)
+                        .map(Pojoa::getData)
                         .collect(Collectors.toList());
             }
         } catch (Exception e) {
@@ -34,9 +39,9 @@ public class universityservice {
     }
 
     // Multiple countries API request with multithreading
-    public List<pojob> getUniversitiesForMultipleCountries(List<String> countries) {
+    public List<Pojob> getUniversitiesForMultipleCountries(List<String> countries) {
         ExecutorService executorService = Executors.newFixedThreadPool(10); // Adjust the pool size
-        List<CompletableFuture<List<pojob>>> futures = countries.stream()
+        List<CompletableFuture<List<Pojob>>> futures = countries.stream()
                 .map(country -> CompletableFuture.supplyAsync(() -> getUniversitiesByCountry(country), executorService))
                 .collect(Collectors.toList());
 

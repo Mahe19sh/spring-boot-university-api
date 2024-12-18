@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,10 +11,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/universities")
-public class universitycontroller {
+public class Universitycontroller {
+    @Autowired
     private final universityservice universityService;
 
-    public universitycontroller(universityservice universityService) {
+    @Autowired
+    public Universitycontroller(universityservice universityService) {
         this.universityService = universityService;
     }
 
